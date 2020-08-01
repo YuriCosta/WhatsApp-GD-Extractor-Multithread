@@ -294,9 +294,9 @@ def runMain(mode, args):
 
 def main():
     args = len(sys.argv)
-    usage = '\nUsage: python '+str(sys.argv[0])+' -help|-vers|-info|-list|-sync [-p]\n'
+    usage = '\nUsage: python '+str(sys.argv[0])+' -help|-vers|-info|-list|-sync [-p] file\n'
     if  args < 2 or str(sys.argv[1]) == '-help' or str(sys.argv[1]) == 'help':
-        print('\nUsage: '+str(sys.argv[0])+' -help|-vers|-info|-list|-sync|-pull file [backupID]')
+        print('\nUsage: '+str(sys.argv[0])+' -help|-vers|-info|-list|-sync [-p] file [backupID]')
         print('\n\nExamples:\n')
         print('python '+str(sys.argv[0])+' -help (this help screen)')
         print('python '+str(sys.argv[0])+' -vers (version information)')

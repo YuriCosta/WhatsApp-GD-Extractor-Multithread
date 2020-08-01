@@ -270,7 +270,7 @@ def getMultipleFiles(data, folder):
         t.join()
     print("File List Downloaded")
 
-def runMain(mode):
+def runMain(mode, args):
     global bearer
     global exitFlag
 
@@ -305,11 +305,11 @@ def main():
         print('python '+str(sys.argv[0])+' -sync (sync all files locally)')
         print('\nYou can add -p flag to ask for password instead of using from settings.cfg')
     elif str(sys.argv[1]) == '-info' or str(sys.argv[1]) == 'info':
-        runMain('info')
+        runMain('info', sys.argv)
     elif str(sys.argv[1]) == '-list' or str(sys.argv[1]) == 'list':
-        runMain('list')
+        runMain('list', sys.argv)
     elif str(sys.argv[1]) == '-sync' or str(sys.argv[1]) == 'sync':
-        runMain('sync')
+        runMain('sync', sys.argv)
     elif str(sys.argv[1]) == '-vers' or str(sys.argv[1]) == 'vers':
         print('\nWhatsAppGDExtract Version 1.2 Copyright (C) 2016 by TripCode\n')
     else:

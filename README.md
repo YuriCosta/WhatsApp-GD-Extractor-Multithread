@@ -44,6 +44,14 @@ Troubleshooting
     https://accounts.google.com/b/0/DisplayUnlockCaptcha
 
 
+Google 2FA
+----------
+
+To login with Google 2FA you should:
+1. Visit [this page](https://accounts.google.com/b/0/DisplayUnlockCaptcha) and unlock your account
+2. Create an [app password](https://myaccount.google.com/apppasswords) by using any name and use this in the `settings.cfg` file
+
+
 Credits
 -------
 

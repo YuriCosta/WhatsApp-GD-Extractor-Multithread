@@ -4,6 +4,15 @@ WhatsApp Google Drive Extractor
 Allows WhatsApp users on Android to extract their backed up WhatsApp data
 from Google Drive.
 
+Status (May 2025)
+-----------------
+
+* Currently, the tool fails with `{'Error': 'ServiceDisabled'}` due to [this
+  issue](https://github.com/simon-weber/gpsoauth/issues/72). An upstream fix was
+  submitted [here](https://github.com/simon-weber/gpsoauth/pull/74).
+* For my most recent backup, I found this project to work better than the
+  alternatives:
+  [whatsapp-backup-downloader-decryptor](https://github.com/giacomoferretti/whatsapp-backup-downloader-decryptor).
 
 Prerequisites
 -------------

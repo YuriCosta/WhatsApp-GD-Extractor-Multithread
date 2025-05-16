@@ -187,18 +187,16 @@ def createSettingsFile():
 
 def backup_info(backup):
     metadata = json.loads(backup["metadata"])
-    for size in "backupSize", "chatdbSize", "mediaSize", "videoSize":
-        metadata[size] = human_size(int(metadata[size]))
-    print("Backup {} Size:({}) Upload Time:{}".format(backup["name"].split("/")[-1], metadata["backupSize"], backup["updateTime"]))
-    print("  WhatsApp version  : {}".format(metadata["versionOfAppWhenBackup"]))
-    try:
-        print("  Password protected: {}".format(metadata["passwordProtectedBackupEnabled"]))
-    except:
-        pass
-    print("  Messages          : {} ({})".format(metadata["numOfMessages"], metadata["chatdbSize"]))
-    print("  Media files       : {} ({})".format(metadata["numOfMediaFiles"], metadata["mediaSize"]))
-    print("  Photos            : {}".format(metadata["numOfPhotos"]))
-    print("  Videos            : included={} ({})".format(metadata["includeVideosInBackup"], metadata["videoSize"]))
+
+    if "encryptedData" in metadata:
+        del metadata["encryptedData"]
+
+    if "backupExpiry" in metadata:
+        del metadata["backupExpiry"]
+
+    print("Backup metadata:")
+    print(json.dumps(metadata, indent=4))
+
 
 def main(args):
     if len(args) != 2 or args[1] not in ("info", "list", "sync"):

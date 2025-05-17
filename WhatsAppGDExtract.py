@@ -59,8 +59,8 @@ class WaBackup:
     """
     Provide access to WhatsApp backups stored in Google drive.
     """
-    def __init__(self, gmail, password, android_id):
-        token = gpsoauth.perform_master_login(gmail, password, android_id)
+    def __init__(self, gmail, oauth_token, android_id):
+        token = gpsoauth.exchange_token(gmail, oauth_token, android_id)
         if "Token" not in token:
             quit(token)
         self.auth = gpsoauth.perform_oauth(
@@ -158,17 +158,17 @@ def getConfigs():
     try:
         config.read("settings.cfg")
         gmail = config.get("auth", "gmail")
-        password = config.get("auth", "password", fallback="")
-        if not password:
+        oauth_token = config.get("auth", "oauth_token", fallback="")
+        if not oauth_token:
             try:
-                password = getpass("Enter your password for {}: ".format(gmail))
+                oauth_token = getpass("Enter your oauth_token for {}: ".format(gmail))
             except KeyboardInterrupt:
                 quit("\nCancelled!")
         android_id = config.get("auth", "android_id")
         return {
             "android_id": android_id,
             "gmail": gmail,
-            "password": password,
+            "oauth_token": oauth_token,
         }
     except (configparser.NoSectionError, configparser.NoOptionError):
         quit("The 'settings.cfg' file is missing or corrupt!")
@@ -178,27 +178,25 @@ def createSettingsFile():
         cfg.write(dedent("""
             [auth]
             gmail = alias@gmail.com
-            # Optional. The account password or app password when using 2FA.
+            # The oauth_token cookie. See README.md for details.
             # You will be prompted if omitted.
-            password = yourpassword
+            oauth_token = your_oauth_token
             # The result of "adb shell settings get secure android_id".
             android_id = 0000000000000000
             """).lstrip())
 
 def backup_info(backup):
     metadata = json.loads(backup["metadata"])
-    for size in "backupSize", "chatdbSize", "mediaSize", "videoSize":
-        metadata[size] = human_size(int(metadata[size]))
-    print("Backup {} Size:({}) Upload Time:{}".format(backup["name"].split("/")[-1], metadata["backupSize"], backup["updateTime"]))
-    print("  WhatsApp version  : {}".format(metadata["versionOfAppWhenBackup"]))
-    try:
-        print("  Password protected: {}".format(metadata["passwordProtectedBackupEnabled"]))
-    except:
-        pass
-    print("  Messages          : {} ({})".format(metadata["numOfMessages"], metadata["chatdbSize"]))
-    print("  Media files       : {} ({})".format(metadata["numOfMediaFiles"], metadata["mediaSize"]))
-    print("  Photos            : {}".format(metadata["numOfPhotos"]))
-    print("  Videos            : included={} ({})".format(metadata["includeVideosInBackup"], metadata["videoSize"]))
+
+    if "encryptedData" in metadata:
+        del metadata["encryptedData"]
+
+    if "backupExpiry" in metadata:
+        del metadata["backupExpiry"]
+
+    print("Backup metadata:")
+    print(json.dumps(metadata, indent=4))
+
 
 def main(args):
     if len(args) != 2 or args[1] not in ("info", "list", "sync"):
